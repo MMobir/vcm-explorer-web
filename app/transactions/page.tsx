@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import useSWR from 'swr'
 import Link from 'next/link'
@@ -10,13 +10,13 @@ import { Button } from '@/components/ui/button'
 import { SkeletonTable } from '@/components/ui/skeleton'
 import { api, type Transaction } from '@/lib/api'
 import { formatNumber, formatDate, cn } from '@/lib/utils'
-import { ArrowUpDown, Calendar, Hash, TrendingUp, TrendingDown, Filter } from 'lucide-react'
+import { ArrowUpDown, Calendar, Hash, TrendingUp, TrendingDown, Filter, X } from 'lucide-react'
 import { motion } from 'framer-motion'
 
 const registries = ['ALL', 'ACR', 'ART', 'CAR', 'GLD', 'VCS']
 const transactionTypes = ['ALL', 'Issuance', 'Retirement', 'Cancellation']
 
-export default function TransactionsPage() {
+function TransactionsContent() {
   const searchParams = useSearchParams()
   const projectIdFromUrl = searchParams.get('project_id')
   
@@ -254,5 +254,19 @@ export default function TransactionsPage() {
   )
 }
 
-// Add missing import for X icon
-import { X } from 'lucide-react'
+export default function TransactionsPage() {
+  return (
+    <Suspense fallback={
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="mb-8 text-4xl font-bold">Carbon Credit Transactions</h1>
+        <Card>
+          <CardContent className="p-0">
+            <SkeletonTable />
+          </CardContent>
+        </Card>
+      </div>
+    }>
+      <TransactionsContent />
+    </Suspense>
+  )
+}

@@ -1,12 +1,13 @@
 'use client'
 
+import { Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { AlertCircle } from 'lucide-react'
 
-export default function AuthErrorPage() {
+function AuthErrorContent() {
   const searchParams = useSearchParams()
   const error = searchParams.get('error')
 
@@ -43,5 +44,25 @@ export default function AuthErrorPage() {
         </CardContent>
       </Card>
     </div>
+  )
+}
+
+export default function AuthErrorPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex min-h-[calc(100vh-8rem)] items-center justify-center px-4">
+        <Card className="w-full max-w-md">
+          <CardContent className="py-8">
+            <div className="animate-pulse space-y-4">
+              <div className="h-16 w-16 mx-auto bg-gray-200 rounded-full"></div>
+              <div className="h-8 bg-gray-200 rounded"></div>
+              <div className="h-4 bg-gray-200 rounded w-3/4 mx-auto"></div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    }>
+      <AuthErrorContent />
+    </Suspense>
   )
 }
